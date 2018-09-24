@@ -1,6 +1,9 @@
 package ui.reddit.sk.materialreddit.Core
 
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.PreferenceManager
+import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -8,20 +11,36 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
+import ui.reddit.sk.materialreddit.Core.Services.SharedPrefRecorder
+import java.util.*
+import java.util.UUID.randomUUID
+
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    protected lateinit var recorder: SharedPrefRecorder
+    lateinit var sharedPref: SharedPreferences
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Initilizing SharedPref
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+        recorder = SharedPrefRecorder(baseContext);
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        //Fetches Values from Reddit
+        getTokenForFetchingArticles();
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+
+
+
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -29,6 +48,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+    }
+
+    private fun getTokenForFetchingArticles() {
+       // TODO("need to add Netwokr call logic") //To change body of created functions use File | Settings | File Templates.
+        val uuidPref = sharedPref.getString("uuid", "na")
+
+
+        if(!uuidPref.contains("na")){
+            Snackbar.make(nav_view , uuidPref+"UUID Present", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+            hellow.text = uuidPref
+
+
+
+
+        }else{
+            val uuid = UUID.randomUUID().toString()
+            Snackbar.make(nav_view , "NoUUID-InPref", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+            recorder.savePreferencesS("uuid",uuid)
+        }
+
+
+
+
+
+
+
     }
 
     override fun onBackPressed() {
