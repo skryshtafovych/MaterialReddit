@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun getTokenForFetchingArticles() {
-       // TODO("need to add Netwokr call logic") //To change body of created functions use File | Settings | File Templates.
+       // TODO("need to add Netwokr call logic")
         val uuidPref = sharedPref.getString("uuid", "na")
 
 
