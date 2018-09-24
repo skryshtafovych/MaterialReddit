@@ -35,9 +35,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recorder = SharedPrefRecorder(baseContext);
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        //Fetches Values from Reddit
-        getTokenForFetchingArticles();
-
 
 
 
@@ -76,6 +73,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        //Fetches Values from Reddit
+        getTokenForFetchingArticles()
+        println("Intercept2")
     }
 
     override fun onBackPressed() {
