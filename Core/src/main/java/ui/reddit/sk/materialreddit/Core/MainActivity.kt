@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if(!uuidPref.contains("na")){
             Snackbar.make(nav_view , uuidPref+"UUID Present", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
-            //hellow.text = uuidPref
+            uuid.text = uuidPref
 
 
 
