@@ -1,13 +1,13 @@
 package ui.reddit.sk.materialreddit.Core
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 
-class Myadapter(private val mDataList: ArrayList<StoriesModel>) : RecyclerView.Adapter<Myadapter.MyViewHolder>() {
+class Myadapter(private val mDataList: ArrayList<StoriesModel>) : androidx.recyclerview.widget.RecyclerView.Adapter<Myadapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.reddit_story, parent, false)
@@ -22,7 +22,7 @@ class Myadapter(private val mDataList: ArrayList<StoriesModel>) : RecyclerView.A
         return mDataList.size
     }
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MyViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         internal var tv_login: TextView
 
         init {

@@ -3,26 +3,20 @@ package ui.reddit.sk.materialreddit.Core
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.provider.Settings
-import android.support.design.widget.Snackbar
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.navigation.NavigationView
+import androidx.core.view.GravityCompat
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import ui.reddit.sk.materialreddit.Core.Services.SharedPrefRecorder
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 import java.util.*
-import java.util.UUID.randomUUID
-
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -30,8 +24,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
-    private var mRecyclerView: RecyclerView? = null
-    private var mAdapter: RecyclerView.Adapter<*>? = null
+    private var mRecyclerView: androidx.recyclerview.widget.RecyclerView? = null
+    private var mAdapter: androidx.recyclerview.widget.RecyclerView.Adapter<*>? = null
     var listOfusers: ArrayList<StoriesModel> = ArrayList()
     protected lateinit var recorder: SharedPrefRecorder
     lateinit var sharedPref: SharedPreferences
@@ -58,8 +52,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         mRecyclerView = findViewById(R.id.my_recycler_view)
 
-        var mLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        mRecyclerView!!.layoutManager = mLayoutManager
+        //var mLayoutManager = androidx.recyclerview.widget.RecyclerView.VERTICAL(this, , false)
+        //mRecyclerView!!.layoutManager = mLayoutManager
 
         mAdapter = Myadapter(listOfusers)
         mRecyclerView!!.adapter = mAdapter
@@ -136,7 +130,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if(!uuidPref.contains("na")){
             Snackbar.make(nav_view , uuidPref+"UUID Present", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
-            uuid.text = uuidPref
+           //uuid.text = uuidPref
 
 
 
