@@ -26,11 +26,12 @@ interface ApiServices {
 
     @FormUrlEncoded
     //Static Headers
-    @Headers("Content-type: $content_type","Accept: application/json")
-    @POST("/post-here/please")
+    @Headers("Accept: application/json")
+    @POST("access_token")
     fun postTokenFetch(
                    @Header("Authorization") authorization: String,
-                   @Field("SomeValue") redditAUTH: String
+                   @Field("grant_type") grantType: String,
+                   @Field("device_id") deviceID: String
     ): Call<ResponseBody>
 
 

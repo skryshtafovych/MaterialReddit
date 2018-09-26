@@ -9,8 +9,6 @@ import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,7 +24,11 @@ import ui.reddit.sk.materialreddit.Core.Services.ApiServices
 import ui.reddit.sk.materialreddit.Core.Services.SharedPrefRecorder
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 import java.io.IOException
+import java.io.UnsupportedEncodingException
 import java.util.*
+import android.R.attr.data
+
+
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -158,7 +160,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
+
+
     fun fetchData(uuid : String){
+
+
+
+
+        //Set Proper OAUTH HEADER WITH BASE 64`Basic ${btoa(`${clientID}:` + '')}`9ReaThcv41rJmBs26lSDcFxy01k
+// String to be encoded with Base64
+        val text = "0ZFiU6jbZn4D6w:OhuZlhn9WKPN8spRqmfmkcoVaQ8";
+// Sending side
+        var data: ByteArray? = null
+        try {
+            data = text.toByteArray(charset("UTF-8"))
+        } catch (e1: UnsupportedEncodingException) {
+            e1.printStackTrace()
+        }
+        val base64 = Base64.getEncoder().encodeToString(data)
+
+        val oauthEncoded = "Basic "+base64
 
 
         val client = OkHttpClient.Builder()
@@ -166,7 +187,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         val retrofit = Retrofit.Builder()
-                .baseUrl(" https://private-4d97a-sksolutions.apiary-mock.com")
+                .baseUrl("https://www.reddit.com/api/v1/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
@@ -177,10 +198,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         try {
+            println("InsideNetworkCall"+oauthEncoded+"uuid"+uuid)
 
 
 
-            val call = service.postTokenFetch("somestuffs","OtherStuffs")
+            val call = service.postTokenFetch(oauthEncoded,"https://oauth.reddit.com/grants/installed_client",uuid)
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
@@ -207,6 +229,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         try {
 
                             val rawcheckBody = response.errorBody()!!.string()
+                            println("InsideNetworkCall"+rawcheckBody)
+
+
 
                             // JSONObject rawjsonScratcher = new JSONObject(rawcheckBody);
 
