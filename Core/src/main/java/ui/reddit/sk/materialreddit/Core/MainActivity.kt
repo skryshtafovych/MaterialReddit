@@ -155,6 +155,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Snackbar.make(nav_view , "NoUUID-InPref", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
             recorder.savePreferencesS("uuid",uuid)
+            fetchData(uuidPref,::refreshStoriesReddit)
+
         }
 
     }
@@ -164,7 +166,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     println("InsideNetworkCall")
 
-        return kFunction0.call("Hello")
+        return kFunction0.call("YOYORefresh Your self ")
 
 
 
@@ -267,6 +269,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun getStoriesReddit(dudeTest: String){
 
         println("InsideRedditStories"+dudeTest)
+
+
+    }
+
+    fun refreshStoriesReddit(dudeTestRefresh: String){
+
+        println("InsideRefreshStories"+dudeTestRefresh)
 
 
     }
