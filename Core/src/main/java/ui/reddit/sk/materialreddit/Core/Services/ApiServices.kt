@@ -19,7 +19,7 @@ interface ApiServices {
     @GET("/{pathToFetch}")
     fun getStories(
             @Path("pathToFetch") pathToFetch: String,
-            @Header("Bearer ") oauth: String
+            @Header("Authorization") oauth: String
     ): Call<ResponseBody>
 
 

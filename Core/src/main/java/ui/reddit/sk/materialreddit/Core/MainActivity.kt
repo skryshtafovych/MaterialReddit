@@ -13,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onResume()
         //Fetches Values from Reddit
         getTokenForFetchingArticles()
+        tempFetchFunction()
         println("Intercept2")
     }
 
@@ -286,24 +288,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun tempFetchFunction(){
 
-        val client = OkHttpClient.Builder()
+        val clientFetch = OkHttpClient.Builder()
                 .build()
-
-
-        val retrofit = Retrofit.Builder()
-                .baseUrl("https://www.reddit.com/")
-                .client(client)
+//https://oauth.reddit.com/r/programming/
+        val retrofitFetch = Retrofit.Builder()
+                .baseUrl(" https://oauth.reddit.com/")
+                .client(clientFetch)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
 
 
-        val service = retrofit.create(ApiServices::class.java)
+        val serviceFetch = retrofitFetch.create(ApiServices::class.java)
 
 
         try {
-            val call = service.getStories("r/Android/","-4jizZVeMMZaRNKO6McRC7dnLR7Y")
-            call.enqueue(object : Callback<ResponseBody> {
+            val callFetch = serviceFetch.getStories("r/Android/","Bearer -4jizZVeMMZaRNKO6McRC7dnLR7Y")
+            callFetch.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
                     if (response.isSuccessful) {
@@ -313,6 +314,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                             val tokenExtract = JSONObject(jsonStr)
                             println("InsideStoryFetch"+jsonStr)
+                            uuid.text = jsonStr
 
                             return
 
