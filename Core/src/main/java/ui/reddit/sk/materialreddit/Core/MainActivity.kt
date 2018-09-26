@@ -313,7 +313,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val jsonStr = response.body()!!.string()
 
                             val tokenExtract = JSONObject(jsonStr)
-                            println("InsideStoryFetch"+jsonStr)
+                            val childrenOBJ = tokenExtract.getJSONObject("data")
+                            val arrayOfStories = childrenOBJ.getJSONArray("children")
+
+
+                            println("InsideStoryFetch"+arrayOfStories)
                             uuid.text = jsonStr
 
                             return
