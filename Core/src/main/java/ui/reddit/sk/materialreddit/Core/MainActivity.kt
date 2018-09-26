@@ -3,6 +3,7 @@ package ui.reddit.sk.materialreddit.Core
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
@@ -14,8 +15,17 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import ui.reddit.sk.materialreddit.Core.Services.ApiServices
 import ui.reddit.sk.materialreddit.Core.Services.SharedPrefRecorder
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
+import java.io.IOException
 import java.util.*
 
 
@@ -29,6 +39,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var listOfusers: ArrayList<StoriesModel> = ArrayList()
     protected lateinit var recorder: SharedPrefRecorder
     lateinit var sharedPref: SharedPreferences
+    private var service: ApiServices? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,6 +144,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .setAction("Action", null).show()
            //uuid.text = uuidPref
 
+            fetchData(uuidPref)
 
 
 
@@ -141,6 +154,95 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .setAction("Action", null).show()
             recorder.savePreferencesS("uuid",uuid)
         }
+
+    }
+
+
+    fun fetchData(uuid : String){
+
+
+        val client = OkHttpClient.Builder()
+                .build()
+
+
+        val retrofit = Retrofit.Builder()
+                .baseUrl(" https://private-4d97a-sksolutions.apiary-mock.com")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+
+
+        val service = retrofit.create(ApiServices::class.java)
+
+
+        try {
+
+
+
+            val call = service.postTokenFetch("somestuffs","OtherStuffs")
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                    if (response.isSuccessful) {
+
+
+
+
+                        try {
+
+
+                            val jsonStr = response.body()!!.string()
+                            println("InsideNetworkCall"+jsonStr)
+
+
+
+                        } catch (e: IOException) {
+                            Log.e("MainActivity", "Error handling API Response", e)
+
+                        }
+
+
+                    } else
+                        try {
+
+                            val rawcheckBody = response.errorBody()!!.string()
+
+                            // JSONObject rawjsonScratcher = new JSONObject(rawcheckBody);
+
+
+
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+
+
+
+                            return
+
+                        }
+
+
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+
+                    t.printStackTrace()
+
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+
+//        val call = service.postTokenFetch("somestuffs","OtherStuffs")
+//        val result = call.execute().body()
+//        val rawJSON = result.toString()
+
+
+
+
 
     }
 

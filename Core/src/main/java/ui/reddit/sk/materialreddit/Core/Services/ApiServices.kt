@@ -15,7 +15,7 @@ interface ApiServices {
     //Get Stories
     //Static Headers
     @Headers("Content-type: $content_type","Accept: application/json")
-    @GET("/url/url/url")
+    @GET("/sk-solutions/twitter-bot/top-question")
     fun getStories(
             @Header(authorization_oauth) oauth: String,
             @Header("X-Device-Uuid") deviceID: String
@@ -27,9 +27,10 @@ interface ApiServices {
     @FormUrlEncoded
     //Static Headers
     @Headers("Content-type: $content_type","Accept: application/json")
-    @POST("/url/url/url")
+    @POST("/post-here/please")
     fun postTokenFetch(
-                   @Header("Authorization") authorization: String
+                   @Header("Authorization") authorization: String,
+                   @Field("SomeValue") redditAUTH: String
     ): Call<ResponseBody>
 
 
@@ -40,7 +41,7 @@ interface ApiServices {
         ////////////////////////////////////////////////////////////
         const val x_esa_apikey = ""
         const val authorization_oauth = ""
-        const val content_type = ""
+        const val content_type = "application/json"
 
     }
 
