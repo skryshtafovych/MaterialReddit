@@ -53,6 +53,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         println("Intercept1")
+        tempFetchFunction()
+
 
 
 
@@ -228,6 +230,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val tokenExtract = JSONObject(jsonStr)
                             println("InsideNetworkCall"+jsonStr)
 
+
                             return kFunction0.call()
 
 
@@ -276,6 +279,73 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun refreshStoriesReddit(dudeTestRefresh: String){
 
         println("InsideRefreshStories"+dudeTestRefresh)
+
+
+    }
+
+
+    fun tempFetchFunction(){
+
+        val client = OkHttpClient.Builder()
+                .build()
+
+
+        val retrofit = Retrofit.Builder()
+                .baseUrl("https://www.reddit.com/")
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+
+
+        val service = retrofit.create(ApiServices::class.java)
+
+
+        try {
+            val call = service.getStories("r/Android/","-4jizZVeMMZaRNKO6McRC7dnLR7Y")
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                    if (response.isSuccessful) {
+
+                        try {
+                            val jsonStr = response.body()!!.string()
+
+                            val tokenExtract = JSONObject(jsonStr)
+                            println("InsideStoryFetch"+jsonStr)
+
+                            return
+
+
+                        } catch (e: IOException) {
+                            Log.e("InsideStoryFetch", "Error handling API Response", e)
+
+                        }
+
+
+                    } else
+                        try {
+
+                            val rawcheckBody = response.errorBody()!!.string()
+                            println("InsideStoryFetch"+rawcheckBody)
+
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            return
+
+                        }
+
+
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    t.printStackTrace()
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
 
     }

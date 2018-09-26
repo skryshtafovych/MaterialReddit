@@ -14,11 +14,12 @@ interface ApiServices {
 
     //Get Stories
     //Static Headers
-    @Headers("Content-type: $content_type","Accept: application/json")
-    @GET("/sk-solutions/twitter-bot/top-question")
+    @Headers("Content-type: $content_type",
+            "Accept: application/json")
+    @GET("/{pathToFetch}")
     fun getStories(
-            @Header(authorization_oauth) oauth: String,
-            @Header("X-Device-Uuid") deviceID: String
+            @Path("pathToFetch") pathToFetch: String,
+            @Header("Bearer ") oauth: String
     ): Call<ResponseBody>
 
 
