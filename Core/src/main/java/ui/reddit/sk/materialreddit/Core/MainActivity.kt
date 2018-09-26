@@ -26,9 +26,9 @@ import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.util.*
-import android.R.attr.data
-
-
+import org.json.JSONObject
+import kotlin.reflect.KFunction0
+import kotlin.reflect.KFunction1
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -146,7 +146,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .setAction("Action", null).show()
            //uuid.text = uuidPref
 
-            fetchData(uuidPref)
+            fetchData(uuidPref,::getStoriesReddit)
 
 
 
@@ -159,114 +159,114 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    private fun fetchData(uuid: String?, kFunction0: KFunction1<@ParameterName(name = "dudeTest") String, Unit>) {
+        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+                    println("InsideNetworkCall")
+
+        return kFunction0.call("Hello")
 
 
 
-    fun fetchData(uuid : String){
+    }
+
+
+//    fun fetchData(uuid: String, kFunction0: KFunction0<Unit>){
+//
+//
+//
+//
+//
+//
+//
+//        //Set Proper OAUTH HEADER WITH BASE 64`Basic ${btoa(`${clientID}:` + '')}`9ReaThcv41rJmBs26lSDcFxy01k
+//// String to be encoded with Base64
+//        val text = "0ZFiU6jbZn4D6w:OhuZlhn9WKPN8spRqmfmkcoVaQ8";
+//// Sending side
+//        var data: ByteArray? = null
+//        try {
+//            data = text.toByteArray(charset("UTF-8"))
+//        } catch (e1: UnsupportedEncodingException) {
+//            e1.printStackTrace()
+//        }
+//        val base64 = Base64.getEncoder().encodeToString(data)
+//
+//        val oauthEncoded = "Basic "+base64
+//
+//
+//        val client = OkHttpClient.Builder()
+//                .build()
+//
+//
+//        val retrofit = Retrofit.Builder()
+//                .baseUrl("https://www.reddit.com/api/v1/")
+//                .client(client)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build()
+//
+//
+//
+//        val service = retrofit.create(ApiServices::class.java)
+//
+//
+//        try {
+//            println("InsideNetworkCall"+oauthEncoded+"uuid"+uuid)
+//
+//
+//
+//            val call = service.postTokenFetch(oauthEncoded,"https://oauth.reddit.com/grants/installed_client",uuid)
+//            call.enqueue(object : Callback<ResponseBody> {
+//                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+//
+//                    if (response.isSuccessful) {
+//
+//                        try {
+//                            val jsonStr = response.body()!!.string()
+//
+//                            val tokenExtract = JSONObject(jsonStr)
+//                            println("InsideNetworkCall"+jsonStr)
+//
+//                            return kFunction0.call()
+//
+//
+//                        } catch (e: IOException) {
+//                            Log.e("MainActivity", "Error handling API Response", e)
+//
+//                        }
+//
+//
+//                    } else
+//                        try {
+//
+//                            val rawcheckBody = response.errorBody()!!.string()
+//                            println("InsideNetworkCall"+rawcheckBody)
+//
+//                        } catch (e: Exception) {
+//                            e.printStackTrace()
+//                            return
+//
+//                        }
+//
+//
+//                }
+//
+//                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+//                    t.printStackTrace()
+//                }
+//            })
+//
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//    }
 
 
 
 
-        //Set Proper OAUTH HEADER WITH BASE 64`Basic ${btoa(`${clientID}:` + '')}`9ReaThcv41rJmBs26lSDcFxy01k
-// String to be encoded with Base64
-        val text = "0ZFiU6jbZn4D6w:OhuZlhn9WKPN8spRqmfmkcoVaQ8";
-// Sending side
-        var data: ByteArray? = null
-        try {
-            data = text.toByteArray(charset("UTF-8"))
-        } catch (e1: UnsupportedEncodingException) {
-            e1.printStackTrace()
-        }
-        val base64 = Base64.getEncoder().encodeToString(data)
 
-        val oauthEncoded = "Basic "+base64
+    fun getStoriesReddit(dudeTest: String){
 
-
-        val client = OkHttpClient.Builder()
-                .build()
-
-
-        val retrofit = Retrofit.Builder()
-                .baseUrl("https://www.reddit.com/api/v1/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-
-
-
-        val service = retrofit.create(ApiServices::class.java)
-
-
-        try {
-            println("InsideNetworkCall"+oauthEncoded+"uuid"+uuid)
-
-
-
-            val call = service.postTokenFetch(oauthEncoded,"https://oauth.reddit.com/grants/installed_client",uuid)
-            call.enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
-                    if (response.isSuccessful) {
-
-
-
-
-                        try {
-
-
-                            val jsonStr = response.body()!!.string()
-                            println("InsideNetworkCall"+jsonStr)
-
-
-
-                        } catch (e: IOException) {
-                            Log.e("MainActivity", "Error handling API Response", e)
-
-                        }
-
-
-                    } else
-                        try {
-
-                            val rawcheckBody = response.errorBody()!!.string()
-                            println("InsideNetworkCall"+rawcheckBody)
-
-
-
-                            // JSONObject rawjsonScratcher = new JSONObject(rawcheckBody);
-
-
-
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-
-
-
-                            return
-
-                        }
-
-
-                }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
-                    t.printStackTrace()
-
-                }
-            })
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-
-//        val call = service.postTokenFetch("somestuffs","OtherStuffs")
-//        val result = call.execute().body()
-//        val rawJSON = result.toString()
-
-
-
+        println("InsideRedditStories"+dudeTest)
 
 
     }
