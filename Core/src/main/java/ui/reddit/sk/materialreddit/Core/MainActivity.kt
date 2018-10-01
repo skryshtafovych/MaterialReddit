@@ -28,6 +28,7 @@ import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.util.*
 import org.json.JSONObject
+import java.time.Instant
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KFunction1
 
@@ -54,7 +55,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         println("Intercept1")
-        tempFetchFunction()
+        FetchFunction("NA")
+        //OLDfetchData("",::getStoriesReddit())
+
 
 
 
@@ -83,7 +86,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onResume()
         //Fetches Values from Reddit
         getTokenForFetchingArticles()
-        tempFetchFunction()
+        //tempFetchFunction()
         println("Intercept2")
     }
 
@@ -179,23 +182,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun OLDfetchData(uuid: String, kFunction0: KFunction0<Unit>){
 
+//        //Set Proper OAUTH HEADER WITH BASE 64`Basic ${btoa(`${clientID}:` + '')}`9ReaThcv41rJmBs26lSDcFxy01k
+//// String to be encoded with Base64
+//        val text = "0ZFiU6jbZn4D6w:OhuZlhn9WKPN8spRqmfmkcoVaQ8";
+//// Sending side
+//        var data: ByteArray? = null
+//        try {
+//            data = text.toByteArray(charset("UTF-8"))
+//        } catch (e1: UnsupportedEncodingException) {
+//            e1.printStackTrace()
+//        }
+//        val base64 = Base64.getEncoder().encodeToString(data)
 
 
 
+        
 
-
-
-        //Set Proper OAUTH HEADER WITH BASE 64`Basic ${btoa(`${clientID}:` + '')}`9ReaThcv41rJmBs26lSDcFxy01k
-// String to be encoded with Base64
-        val text = "0ZFiU6jbZn4D6w:OhuZlhn9WKPN8spRqmfmkcoVaQ8";
-// Sending side
-        var data: ByteArray? = null
-        try {
-            data = text.toByteArray(charset("UTF-8"))
-        } catch (e1: UnsupportedEncodingException) {
-            e1.printStackTrace()
-        }
-        val base64 = Base64.getEncoder().encodeToString(data)
 
         val oauthEncoded = "Basic MFpGaVU2amJabjRENnc6T2h1WmxobjlXS1BOOHNwUnFtZm1rY29WYVE4"
 
@@ -220,7 +222,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
-            val call = service.postTokenFetch(oauthEncoded,"https://oauth.reddit.com/grants/installed_client",uuid)
+            val call = service.postTokenFetch(oauthEncoded,"https://oauth.reddit.com/grants/installed_client","4e0b545ad2dd445983f6b1ea88c8f0f3")
             call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
@@ -229,11 +231,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         try {
                             val jsonStr = response.body()!!.string()
 
-                            val tokenExtract = JSONObject(jsonStr)
-                            println("InsideNetworkCall"+jsonStr)
+                            val tokenExtractRaw = JSONObject(jsonStr)
+                            val accessToken = tokenExtractRaw.getString("access_token")
+                            val accessTokenExpiresOn = tokenExtractRaw.getLong("expires_in")
 
-
-                            return kFunction0.call()
+                            val now = Instant.now().toEpochMilli()
+                            val combinedExpiredTime = now+accessTokenExpiresOn
+                            println("InsideNetworkCall-ExpireTime"+combinedExpiredTime)
+                            recorder.savePreferencesS("access_token",accessToken)
+                            recorder.savePreferencesNumL("expires_in",combinedExpiredTime)
+                            return kFunction0.call(accessToken)
 
 
                         } catch (e: IOException) {
@@ -286,7 +293,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    fun tempFetchFunction(){
+    fun FetchFunction(accessToken: String){
+
+
+        val acessToken = sharedPref.getString("access_token", "na")
+        val accessTokenExpireTime = sharedPref.getLong("expires_in", 0)
+        val now = Instant.now().toEpochMilli()
+
+
 
         val clientFetch = OkHttpClient.Builder()
                 .build()
@@ -303,7 +317,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         try {
-            val callFetch = serviceFetch.getStories("r/Android/","Bearer -4jizZVeMMZaRNKO6McRC7dnLR7Y")
+            val callFetch = serviceFetch.getStories("r/Android/","Bearer "+accessToken)
             callFetch.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
@@ -365,6 +379,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+
+
+    fun getTimesForToken(){
+
+
+    }
 
 
 
