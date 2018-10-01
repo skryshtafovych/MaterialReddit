@@ -11,6 +11,11 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.PicassoProvider
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -25,12 +30,11 @@ import ui.reddit.sk.materialreddit.Core.Services.ApiServices
 import ui.reddit.sk.materialreddit.Core.Services.SharedPrefRecorder
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 import java.io.IOException
-import java.io.UnsupportedEncodingException
 import java.util.*
 import org.json.JSONObject
 import java.time.Instant
-import kotlin.reflect.KFunction0
 import kotlin.reflect.KFunction1
+
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -46,6 +50,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var service: ApiServices? = null
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Initilizing SharedPref
@@ -55,12 +60,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         println("Intercept1")
-        FetchFunction("NA")
-        //OLDfetchData("",::getStoriesReddit())
-
-
-
-
+        //FetchFunction("NA")
+        tokenDecider("",::FetchFunction)
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -70,13 +71,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
 
-        mRecyclerView = findViewById(R.id.my_recycler_view)
+      //  mRecyclerView = findViewById(R.id.my_recycler_view)
 
-        //var mLayoutManager = androidx.recyclerview.widget.RecyclerView.VERTICAL(this, , false)
-        //mRecyclerView!!.layoutManager = mLayoutManager
 
-        mAdapter = Myadapter(listOfusers)
-        mRecyclerView!!.adapter = mAdapter
+        setStoriesList()
+
+//
+//        mAdapter = Myadapter(listOfusers)
+//        mRecyclerView!!.adapter = mAdapter
+//
+
+
+
 
     }
 
@@ -84,9 +90,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     public override fun onResume() {
         super.onResume()
-        //Fetches Values from Reddit
-        getTokenForFetchingArticles()
-        //tempFetchFunction()
         println("Intercept2")
     }
 
@@ -143,162 +146,111 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
-    private fun getTokenForFetchingArticles() {
-        // TODO("need to add Netwokr call logic") //To change body of created functions use File | Settings | File Templates.
-        val uuidPref = sharedPref.getString("uuid", "na")
 
 
-        if(!uuidPref.contains("na")){
-            Snackbar.make(nav_view , uuidPref+"UUID Present", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-           //uuid.text = uuidPref
 
-            fetchData(uuidPref,::getStoriesReddit)
-
-
-
-        }else{
-            val uuid = UUID.randomUUID().toString()
-            Snackbar.make(nav_view , "NoUUID-InPref", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-            recorder.savePreferencesS("uuid",uuid)
-            fetchData(uuidPref,::refreshStoriesReddit)
-
-        }
-
-    }
-
-    private fun fetchData(uuid: String?, kFunction0: KFunction1<@ParameterName(name = "dudeTest") String, Unit>) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
-                    println("InsideNetworkCall")
-
-        return kFunction0.call("YOYORefresh Your self ")
-
-
-
-    }
-
-
-    fun OLDfetchData(uuid: String, kFunction0: KFunction0<Unit>){
-
-//        //Set Proper OAUTH HEADER WITH BASE 64`Basic ${btoa(`${clientID}:` + '')}`9ReaThcv41rJmBs26lSDcFxy01k
-//// String to be encoded with Base64
-//        val text = "0ZFiU6jbZn4D6w:OhuZlhn9WKPN8spRqmfmkcoVaQ8";
-//// Sending side
-//        var data: ByteArray? = null
-//        try {
-//            data = text.toByteArray(charset("UTF-8"))
-//        } catch (e1: UnsupportedEncodingException) {
-//            e1.printStackTrace()
-//        }
-//        val base64 = Base64.getEncoder().encodeToString(data)
-
-
-
-        
-
-
-        val oauthEncoded = "Basic MFpGaVU2amJabjRENnc6T2h1WmxobjlXS1BOOHNwUnFtZm1rY29WYVE4"
-
-
-        val client = OkHttpClient.Builder()
-                .build()
-
-
-        val retrofit = Retrofit.Builder()
-                .baseUrl("https://www.reddit.com/api/v1/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-
-
-
-        val service = retrofit.create(ApiServices::class.java)
-
-
-        try {
-            println("InsideNetworkCall"+oauthEncoded+"uuid"+uuid)
-
-
-
-            val call = service.postTokenFetch(oauthEncoded,"https://oauth.reddit.com/grants/installed_client","4e0b545ad2dd445983f6b1ea88c8f0f3")
-            call.enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
-                    if (response.isSuccessful) {
-
-                        try {
-                            val jsonStr = response.body()!!.string()
-
-                            val tokenExtractRaw = JSONObject(jsonStr)
-                            val accessToken = tokenExtractRaw.getString("access_token")
-                            val accessTokenExpiresOn = tokenExtractRaw.getLong("expires_in")
-
-                            val now = Instant.now().toEpochMilli()
-                            val combinedExpiredTime = now+accessTokenExpiresOn
-                            println("InsideNetworkCall-ExpireTime"+combinedExpiredTime)
-                            recorder.savePreferencesS("access_token",accessToken)
-                            recorder.savePreferencesNumL("expires_in",combinedExpiredTime)
-                            return kFunction0.call(accessToken)
-
-
-                        } catch (e: IOException) {
-                            Log.e("MainActivity", "Error handling API Response", e)
-
-                        }
-
-
-                    } else
-                        try {
-
-                            val rawcheckBody = response.errorBody()!!.string()
-                            println("InsideNetworkCall"+rawcheckBody)
-
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            return
-
-                        }
-
-
-                }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    t.printStackTrace()
-                }
-            })
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-
-
-
-
-    fun getStoriesReddit(dudeTest: String){
-
-        println("InsideRedditStories"+dudeTest)
-
-
-    }
-
-    fun refreshStoriesReddit(dudeTestRefresh: String){
-
-        println("InsideRefreshStories"+dudeTestRefresh)
-
-
-    }
-
-
-    fun FetchFunction(accessToken: String){
+    fun tokenDecider(uuid: String, kFunction0: KFunction1<@ParameterName(name = "na") String, Unit>){
 
 
         val acessToken = sharedPref.getString("access_token", "na")
         val accessTokenExpireTime = sharedPref.getLong("expires_in", 0)
         val now = Instant.now().toEpochMilli()
+        println("SharedPref"+now+"\nSharedPref"+accessTokenExpireTime)
+        ///IF TOKEN IS EXPIRED OR DEAD GET NEW TOKEN
+        if(now > accessTokenExpireTime){
+            println("TokenHasExpired")
+
+
+            val oauthEncoded = "Basic MFpGaVU2amJabjRENnc6T2h1WmxobjlXS1BOOHNwUnFtZm1rY29WYVE4"
+            val client = OkHttpClient.Builder()
+                    .build()
+
+            val retrofit = Retrofit.Builder()
+                    .baseUrl("https://www.reddit.com/api/v1/")
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+            val service = retrofit.create(ApiServices::class.java)
+            try {
+                println("InsideNetworkCall"+oauthEncoded+"uuid"+uuid)
+
+                val call = service.postTokenFetch(oauthEncoded,"https://oauth.reddit.com/grants/installed_client","4e0b545ad2dd445983f6b1ea88c8f0f3")
+                call.enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                        if (response.isSuccessful) {
+
+                            try {
+                                val jsonStr = response.body()!!.string()
+
+                                val tokenExtractRaw = JSONObject(jsonStr)
+                                val accessToken = tokenExtractRaw.getString("access_token")
+                                val accessTokenExpiresOn = tokenExtractRaw.getLong("expires_in")
+
+
+                                val now = Instant.now().toEpochMilli()
+                                val combinedExpiredTime = now+accessTokenExpiresOn
+                                println("InsideNetworkCall-ExpireTime"+combinedExpiredTime)
+                                recorder.savePreferencesS("access_token",accessToken)
+                                recorder.savePreferencesNumL("expires_in",combinedExpiredTime)
+                                return kFunction0.call(accessToken)
+
+
+                            } catch (e: IOException) {
+                                Log.e("MainActivity", "Error handling API Response", e)
+
+                            }
+
+
+                        } else
+                            try {
+
+                                val rawcheckBody = response.errorBody()!!.string()
+                                println("InsideNetworkCall"+rawcheckBody)
+
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                return
+
+                            }
+
+
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        t.printStackTrace()
+                    }
+                })
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        }
+
+        mAdapter?.notifyDataSetChanged()
+
+
+        val uuidPref = sharedPref.getString("uuid", "na")
+        if(!uuidPref.contains("na"))
+        {
+        }else{
+            val uuid = UUID.randomUUID().toString()
+            recorder.savePreferencesS("uuid",uuid)
+        }
+
+
+        return kFunction0.call(acessToken)
+
+    }
+
+
+
+
+    fun FetchFunction(accessToken: String){
+
+
 
 
 
@@ -317,7 +269,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         try {
-            val callFetch = serviceFetch.getStories("r/Android/","Bearer "+accessToken)
+            val callFetch = serviceFetch.getStories("r/all/","Bearer "+accessToken)
             callFetch.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
@@ -329,8 +281,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val tokenExtract = JSONObject(jsonStr)
                             val childrenOBJ = tokenExtract.getJSONObject("data")
                             val arrayOfStories = childrenOBJ.getJSONArray("children")
+                            val pagingAfter = childrenOBJ.optString("after")
+                            val pagingBefore = childrenOBJ.optString("before")
 
 
+                            for (i in 0..(arrayOfStories.length() - 1)) {
+                                val item = arrayOfStories.getJSONObject(i)
+                                val singleKindType = item.getJSONObject("data")
+                                val subreddit_name_prefixed = singleKindType.optString("subreddit_name_prefixed")
+                                //DATA OBJ With Specifc Values
+                                println("FakeIterator since going over index."+subreddit_name_prefixed)
+
+                                // Your code here
+                            }
+
+                            val arraySIZE = arrayOfStories.length()
+                            println("ArrayCount"+arraySIZE+"\nPAGING"+pagingAfter)
+
+
+
+                            //THIS IS How Paging API should look like.
+                            //https://oauth.reddit.com/r/all?after=t3_9kh692
 
 //                                    t1_	Comment
 //                                    t2_	Account
@@ -340,9 +311,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                                    t6_	Award
 
 
-                            println("InsideStoryFetch"+arrayOfStories)
-                            uuid.text = jsonStr
 
+
+                            println("InsideStoryFetch"+arrayOfStories)
                             return
 
 
@@ -377,14 +348,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
 
-    }
-
-
-
-    fun getTimesForToken(){
-
 
     }
+    private fun setStoriesList() {
+
+        recyclerView.visibility = View.VISIBLE
+        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val versions = ArrayList<StoriesModel>()
+
+        versions.addAll(StoriesModel.getStoriesModel())
+
+        val myAdapter = MyAdapter(versions)
+        recyclerView.adapter = myAdapter
+    }
+
 
 
 

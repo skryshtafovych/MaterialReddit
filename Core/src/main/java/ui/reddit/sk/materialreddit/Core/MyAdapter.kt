@@ -4,29 +4,36 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 
-class Myadapter(private val mDataList: ArrayList<StoriesModel>) : androidx.recyclerview.widget.RecyclerView.Adapter<Myadapter.MyViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.reddit_story, parent, false)
-        return MyViewHolder(view)
-    }
+class MyAdapter(private val versionList: ArrayList<StoriesModel>) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.tv_login.text = mDataList[position].login
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bindItems(versionList[position])
     }
 
     override fun getItemCount(): Int {
-        return mDataList.size
+        return versionList.size
     }
 
-    inner class MyViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        internal var tv_login: TextView
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.reddit_story, parent, false))
+    }
 
-        init {
-            tv_login = itemView.findViewById<View>(R.id.tv_login) as TextView
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bindItems(version: StoriesModel) {
+            val textView = itemView.findViewById<TextView>(R.id.tv_desc)
+            val imageView = itemView.findViewById<ImageView>(R.id.iv_preview_story)
+            textView.text = version.desc;
+
+            Picasso.get().load(version.desc)
+                    .into(imageView);
+
+
         }
     }
 }
