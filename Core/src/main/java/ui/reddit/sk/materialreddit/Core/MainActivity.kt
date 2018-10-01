@@ -197,7 +197,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         val base64 = Base64.getEncoder().encodeToString(data)
 
-        val oauthEncoded = "Basic "+base64
+        val oauthEncoded = "Basic MFpGaVU2amJabjRENnc6T2h1WmxobjlXS1BOOHNwUnFtZm1rY29WYVE4"
 
 
         val client = OkHttpClient.Builder()
@@ -315,6 +315,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val tokenExtract = JSONObject(jsonStr)
                             val childrenOBJ = tokenExtract.getJSONObject("data")
                             val arrayOfStories = childrenOBJ.getJSONArray("children")
+
+
+
+//                                    t1_	Comment
+//                                    t2_	Account
+//                                    t3_	Link
+//                                    t4_	Message
+//                                    t5_	Subreddit
+//                                    t6_	Award
 
 
                             println("InsideStoryFetch"+arrayOfStories)
