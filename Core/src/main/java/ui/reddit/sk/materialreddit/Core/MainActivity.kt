@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                                 val now = Instant.now().toEpochMilli()
                                 val combinedExpiredTime = now+accessTokenExpiresOn
-                                println("InsideNetworkCall-ExpireTime"+combinedExpiredTime)
+                                println("InsideNetworkCall-Token"+accessToken)
                                 recorder.savePreferencesS("access_token",accessToken)
                                 recorder.savePreferencesNumL("expires_in",combinedExpiredTime)
                                 return kFunction0.call(accessToken)
