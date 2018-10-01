@@ -14,10 +14,10 @@ class StoriesModel(    var id: Int ,
         fun getStoriesModel(): List<StoriesModel> {
             val storiesList = ArrayList<StoriesModel>()
             storiesList.clear()
-            storiesList.add(StoriesModel(0,"https://raw.githubusercontent.com/AndroidCodility/Picasso-RecyclerView/master/images/cup_cake.png", "Cup Cake"))
-            storiesList.add(StoriesModel(1,"https://raw.githubusercontent.com/AndroidCodility/Picasso-RecyclerView/master/images/donut.png", "Donut"))
-            storiesList.add(StoriesModel(2,"https://raw.githubusercontent.com/AndroidCodility/Picasso-RecyclerView/master/images/eclair.png", "Eclair"))
-            storiesList.add(StoriesModel(3,"https://raw.githubusercontent.com/AndroidCodility/Picasso-RecyclerView/master/images/Froyo.jpg", "Froyo"))
+            storiesList.add(StoriesModel(0,"https://vignette.wikia.nocookie.net/central/images/1/10/Reddit.png/revision/latest?cb=20171025091848", "Cup Cake"));
+            storiesList.add(StoriesModel(1,"https://vignette.wikia.nocookie.net/central/images/1/10/Reddit.png/revision/latest?cb=20171025091848", "Donut"));
+            storiesList.add(StoriesModel(2,"https://vignette.wikia.nocookie.net/central/images/1/10/Reddit.png/revision/latest?cb=20171025091848", "Eclair"));
+            storiesList.add(StoriesModel(3,"https://vignette.wikia.nocookie.net/central/images/1/10/Reddit.png/revision/latest?cb=20171025091848", "Froyo"));
 
             return storiesList
         }

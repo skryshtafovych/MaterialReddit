@@ -10,14 +10,14 @@ import com.squareup.picasso.Picasso
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 
 
-class MyAdapter(private val versionList: ArrayList<StoriesModel>) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItems(versionList[position])
+        holder.bindItems(storiesList[position])
     }
 
     override fun getItemCount(): Int {
-        return versionList.size
+        return storiesList.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,7 +28,7 @@ class MyAdapter(private val versionList: ArrayList<StoriesModel>) : RecyclerView
         fun bindItems(version: StoriesModel) {
             val textView = itemView.findViewById<TextView>(R.id.tv_desc)
             val imageView = itemView.findViewById<ImageView>(R.id.iv_preview_story)
-            textView.text = version.desc;
+            textView.text = version.image_url;
 
             Picasso.get().load(version.desc)
                     .into(imageView);
