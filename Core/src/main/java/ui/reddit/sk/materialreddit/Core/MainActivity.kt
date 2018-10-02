@@ -289,7 +289,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                     println("FakeIterator since going over index."+imagesAR)
                                 }
                                 //DATA OBJ With Specifc Values
-                                storiesListFetched.add(StoriesModel(0,imagesAR, subreddit_name_prefixed,num_comments.toString(),score.toString()));
+                                storiesListFetched.add(StoriesModel(0,imagesAR, subreddit_name_prefixed,num_comments.toString(),score.toString(),title));
 
 
                                 // Your code here

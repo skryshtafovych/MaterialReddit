@@ -31,9 +31,12 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
             val imageView = itemView.findViewById<ImageView>(R.id.iv_preview_story)
             val commentCount = itemView.findViewById<TextView>(R.id.tv_comments)
             val upvoteCount = itemView.findViewById<TextView>(R.id.tv_upvotes)
+            val title = itemView.findViewById<TextView>(R.id.tv_title)
+
             textView.text = version.image_url;
             commentCount.text = version.comment_count
             upvoteCount.text = version.upvote_count
+            title.text = version.title
 
             Glide.with(itemView)
                     .load(version.desc)

@@ -16,7 +16,8 @@ class StoriesModel(    var id: Int ,
                        var desc: String,
                        var image_url: String,
                        var comment_count: String,
-                       var upvote_count: String ): Serializable {
+                       var upvote_count: String,
+                       var title: String): Serializable {
 
 
 
