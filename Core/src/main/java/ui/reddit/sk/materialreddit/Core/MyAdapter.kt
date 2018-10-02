@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 
@@ -30,8 +31,11 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
             val imageView = itemView.findViewById<ImageView>(R.id.iv_preview_story)
             textView.text = version.image_url;
 
-            Picasso.get().load(version.desc)
-                    .into(imageView);
+            Glide.with(itemView)
+                    .load(version.desc)
+                    .into(imageView)
+
+
 
 
         }

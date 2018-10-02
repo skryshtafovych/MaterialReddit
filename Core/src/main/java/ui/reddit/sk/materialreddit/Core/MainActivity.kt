@@ -260,6 +260,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
                     storiesListFetched.clear()
+                    var imagesAR: String = ""
+
 
                     if (response.isSuccessful) {
 
@@ -277,9 +279,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 val item = arrayOfStories.getJSONObject(i)
                                 val singleKindType = item.getJSONObject("data")
                                 val subreddit_name_prefixed = singleKindType.optString("subreddit_name_prefixed")
+                                imagesAR = singleKindType.optString("thumbnail")
+                                val previewARImages = singleKindType.optJSONObject("preview")
+                                print("FullJSON-Per-Item."+item)
+
+                                if(previewARImages!== null){
+                                     imagesAR = previewARImages.optJSONArray("images").getJSONObject(0).getJSONObject("source").getString("url")
+
+                                    println("FakeIterator since going over index."+imagesAR)
+
+
+                                }
                                 //DATA OBJ With Specifc Values
-                                println("FakeIterator since going over index."+subreddit_name_prefixed)
-                                storiesListFetched.add(StoriesModel(0,"https://vignette.wikia.nocookie.net/central/images/1/10/Reddit.png/revision/latest?cb=20171025091848", subreddit_name_prefixed));
+                                storiesListFetched.add(StoriesModel(0,imagesAR, subreddit_name_prefixed));
 
 
                                 // Your code here
@@ -347,11 +359,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         recyclerView.visibility = View.VISIBLE
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-
         val versions = ArrayList<StoriesModel>()
-
         versions.addAll(storiesListFetched)
-
         val myAdapter = MyAdapter(versions)
         recyclerView.adapter = myAdapter
     }
