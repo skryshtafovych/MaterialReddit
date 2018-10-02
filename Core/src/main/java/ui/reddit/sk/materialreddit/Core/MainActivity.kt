@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     protected lateinit var recorder: SharedPrefRecorder
     lateinit var sharedPref: SharedPreferences
     private var service: ApiServices? = null
+    val storiesListFetched = ArrayList<StoriesModel>()
+
 
 
 
@@ -58,7 +60,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recorder = SharedPrefRecorder(baseContext);
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
         println("Intercept1")
         //FetchFunction("NA")
         tokenDecider("",::FetchFunction)
@@ -67,23 +68,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-
         nav_view.setNavigationItemSelectedListener(this)
-
-
-      //  mRecyclerView = findViewById(R.id.my_recycler_view)
-
-
-        setStoriesList()
-
-//
-//        mAdapter = Myadapter(listOfusers)
-//        mRecyclerView!!.adapter = mAdapter
-//
-
-
-
-
+        //setStoriesList()
     }
 
 
@@ -273,6 +259,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             callFetch.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
+                    storiesListFetched.clear()
+
                     if (response.isSuccessful) {
 
                         try {
@@ -291,12 +279,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 val subreddit_name_prefixed = singleKindType.optString("subreddit_name_prefixed")
                                 //DATA OBJ With Specifc Values
                                 println("FakeIterator since going over index."+subreddit_name_prefixed)
+                                storiesListFetched.add(StoriesModel(0,"https://vignette.wikia.nocookie.net/central/images/1/10/Reddit.png/revision/latest?cb=20171025091848", subreddit_name_prefixed));
+
 
                                 // Your code here
                             }
 
                             val arraySIZE = arrayOfStories.length()
                             println("ArrayCount"+arraySIZE+"\nPAGING"+pagingAfter)
+
+
+
 
 
 
@@ -314,7 +307,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
                             println("InsideStoryFetch"+arrayOfStories)
-                            return
 
 
                         } catch (e: IOException) {
@@ -323,6 +315,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         }
 
 
+                        setStoriesList()
                     } else
                         try {
 
@@ -357,7 +350,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val versions = ArrayList<StoriesModel>()
 
-        versions.addAll(StoriesModel.getStoriesModel())
+        versions.addAll(storiesListFetched)
 
         val myAdapter = MyAdapter(versions)
         recyclerView.adapter = myAdapter

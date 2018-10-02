@@ -22,7 +22,7 @@ class StoriesModel(    var id: Int ,
     companion object {
 
         fun getStoriesModel(): List<StoriesModel> {
-            FetchFunction("-5rCjSuy6VTG3kikS6pa2XcykSeY")
+            //FetchFunction("-5rCjSuy6VTG3kikS6pa2XcykSeY")
 
             val storiesList = ArrayList<StoriesModel>()
             storiesList.clear()
@@ -34,9 +34,16 @@ class StoriesModel(    var id: Int ,
             return storiesList
         }
 
-        fun FetchFunction(accessToken: String){
+        fun FetchFunction(accessToken: String): List<StoriesModel>{
 
 
+            val storiesList = ArrayList<StoriesModel>()
+
+            storiesList.clear()
+            storiesList.add(StoriesModel(0,"https://vignette.wikia.nocookie.net/central/images/1/10/Reddit.png/revision/latest?cb=20171025091848", "Cup Cake"));
+            storiesList.add(StoriesModel(1,"https://vignette.wikia.nocookie.net/central/images/1/10/Reddit.png/revision/latest?cb=20171025091848", "Donut"));
+            storiesList.add(StoriesModel(2,"https://vignette.wikia.nocookie.net/central/images/1/10/Reddit.png/revision/latest?cb=20171025091848", "Eclair"));
+            storiesList.add(StoriesModel(3,"https://vignette.wikia.nocookie.net/central/images/1/10/Reddit.png/revision/latest?cb=20171025091848", "Froyo"));
 
 
 
@@ -69,7 +76,8 @@ class StoriesModel(    var id: Int ,
                                 val arrayOfStories = childrenOBJ.getJSONArray("children")
                                 val pagingAfter = childrenOBJ.optString("after")
                                 val pagingBefore = childrenOBJ.optString("before")
-
+                                //Repopulation OF Model
+                                storiesList.add(StoriesModel(4,pagingAfter, "saldjfhlkajsdf"));
 
                                 for (i in 0..(arrayOfStories.length() - 1)) {
                                     val item = arrayOfStories.getJSONObject(i)
@@ -78,29 +86,11 @@ class StoriesModel(    var id: Int ,
                                     //DATA OBJ With Specifc Values
                                     println("FakeIterator since going over index."+subreddit_name_prefixed)
 
-                                    // Your code here
                                 }
 
                                 val arraySIZE = arrayOfStories.length()
                                 println("ArrayCount"+arraySIZE+"\nPAGING"+pagingAfter)
-
-
-
-                                //THIS IS How Paging API should look like.
-                                //https://oauth.reddit.com/r/all?after=t3_9kh692
-
-//                                    t1_	Comment
-//                                    t2_	Account
-//                                    t3_	Link
-//                                    t4_	Message
-//                                    t5_	Subreddit
-//                                    t6_	Award
-
-
-
-
                                 println("IN-theModelFetch"+arrayOfStories)
-                                return
 
 
                             } catch (e: IOException) {
@@ -117,7 +107,6 @@ class StoriesModel(    var id: Int ,
 
                             } catch (e: Exception) {
                                 e.printStackTrace()
-                                return
 
                             }
 
@@ -134,8 +123,10 @@ class StoriesModel(    var id: Int ,
             }
 
 
-
+            return storiesList
         }
+
+
 
 
 
