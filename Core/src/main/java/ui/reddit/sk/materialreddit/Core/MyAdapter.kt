@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 
 
@@ -29,7 +29,11 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
         fun bindItems(version: StoriesModel) {
             val textView = itemView.findViewById<TextView>(R.id.tv_desc)
             val imageView = itemView.findViewById<ImageView>(R.id.iv_preview_story)
+            val commentCount = itemView.findViewById<TextView>(R.id.tv_comments)
+            val upvoteCount = itemView.findViewById<TextView>(R.id.tv_upvotes)
             textView.text = version.image_url;
+            commentCount.text = version.comment_count
+            upvoteCount.text = version.upvote_count
 
             Glide.with(itemView)
                     .load(version.desc)

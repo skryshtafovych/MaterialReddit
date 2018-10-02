@@ -14,8 +14,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.PicassoProvider
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -279,19 +277,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 val item = arrayOfStories.getJSONObject(i)
                                 val singleKindType = item.getJSONObject("data")
                                 val subreddit_name_prefixed = singleKindType.optString("subreddit_name_prefixed")
+                                val title = singleKindType.optString("title")
+                                val num_comments = singleKindType.optInt("num_comments")
+                                val score = singleKindType.optInt("score")
                                 imagesAR = singleKindType.optString("thumbnail")
                                 val previewARImages = singleKindType.optJSONObject("preview")
                                 print("FullJSON-Per-Item."+item)
 
                                 if(previewARImages!== null){
-                                     imagesAR = previewARImages.optJSONArray("images").getJSONObject(0).getJSONObject("source").getString("url")
-
+                                    imagesAR = previewARImages.optJSONArray("images").getJSONObject(0).getJSONObject("source").getString("url")
                                     println("FakeIterator since going over index."+imagesAR)
-
-
                                 }
                                 //DATA OBJ With Specifc Values
-                                storiesListFetched.add(StoriesModel(0,imagesAR, subreddit_name_prefixed));
+                                storiesListFetched.add(StoriesModel(0,imagesAR, subreddit_name_prefixed,num_comments.toString(),score.toString()));
 
 
                                 // Your code here
