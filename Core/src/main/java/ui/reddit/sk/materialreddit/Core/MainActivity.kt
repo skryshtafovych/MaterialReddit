@@ -339,6 +339,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
+
+
                             println("InsideStoryFetch"+arrayOfStories)
 
 
@@ -384,6 +386,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         versions.addAll(storiesListFetched)
         val myAdapter = MyAdapter(versions)
         recyclerView.adapter = myAdapter
+
     }
 
 
