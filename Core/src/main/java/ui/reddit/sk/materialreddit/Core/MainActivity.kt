@@ -459,6 +459,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                 Toast.makeText(this, value,
                         Toast.LENGTH_SHORT).show()
+
+                tokenDecider("",::FetchFunction)
+
             } catch (e: NumberFormatException) {
                 Log.d("InsideNumChooser", "No Values in draw# field")
                 alert.setPositiveButton("", null)

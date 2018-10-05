@@ -46,13 +46,6 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
 
 
 
-                itemView.setOnClickListener(View.OnClickListener {
-
-                    println("OnClickListenerStuffs")
-
-
-
-                })
 
 
 
