@@ -23,12 +23,6 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
         return storiesList.size
     }
 
-    fun onClick(view: View) {
-        println("OnClickListenerStuffs")
-
-
-
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -46,6 +40,13 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
 
 
 
+                itemView.setOnClickListener(View.OnClickListener {
+
+                    println("PrinterThatweSeee")
+
+
+
+                })
 
 
 
