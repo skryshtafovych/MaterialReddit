@@ -1,17 +1,22 @@
 package ui.reddit.sk.materialreddit.Core
 
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.widget.EditText
+import android.widget.SeekBar
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -96,9 +101,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
-            R.id.action_settings -> return true
+            R.id.action_settings ->
+//                showAlertDialog {
+//                    setTitle("Settings")
+//                    setMessage("Here you can change amount of Stories returned on one page")
+//                    positiveButton("Yes") {
+//
+//                    }
+//
+//                    negativeButton {
+//                    }
+//                }
+                settingsChooser()
+
+
             else -> return super.onOptionsItemSelected(item)
         }
+        return true
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -235,12 +254,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun FetchFunction(accessToken: String){
 
 
+        val articlePerPage =  sharedPref.getString("articlePerPage", "25")
 
 
+        print("SharedPref."+articlePerPage)
 
         val clientFetch = OkHttpClient.Builder()
                 .build()
 //https://oauth.reddit.com/r/programming/
+        // //oauth.reddit.com/r/all?limit=2
         val retrofitFetch = Retrofit.Builder()
                 .baseUrl(" https://oauth.reddit.com/")
                 .client(clientFetch)
@@ -253,7 +275,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         try {
-            val callFetch = serviceFetch.getStories("r/all/","Bearer "+accessToken)
+            val callFetch = serviceFetch.getStories("r/all/",articlePerPage,"Bearer "+accessToken)
             callFetch.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
@@ -278,6 +300,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 val singleKindType = item.getJSONObject("data")
                                 val subreddit_name_prefixed = singleKindType.optString("subreddit_name_prefixed")
                                 val title = singleKindType.optString("title")
+                               // val smallTitle = getWordFromTitle(title)
                                 val num_comments = singleKindType.optInt("num_comments")
                                 val score = singleKindType.optInt("score")
                                 imagesAR = singleKindType.optString("thumbnail")
@@ -361,6 +384,120 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         versions.addAll(storiesListFetched)
         val myAdapter = MyAdapter(versions)
         recyclerView.adapter = myAdapter
+    }
+
+
+    private fun getWordFromTitle(sentenceToChop:String ):String{
+
+        val arr = sentenceToChop.split(" ".toRegex(), 6).toTypedArray()
+
+        val firstWord = arr[0]   //the
+        val theRest = arr[1]
+
+
+
+        return firstWord
+    }
+
+
+
+
+
+
+
+
+
+    fun showAlertDialog(dialogBuilder: AlertDialog.Builder.() -> Unit) {
+        val builder = AlertDialog.Builder(this)
+        val seek =  SeekBar(this);
+        seek.setMax(255);
+        seek.setKeyProgressIncrement(1);
+        builder.dialogBuilder()
+        builder.setView(seek)
+        val dialog = builder.create()
+
+        dialog.show()
+    }
+
+    fun AlertDialog.Builder.positiveButton(text: String = "Okay", handleClick: (which: Int) -> Unit = {}) {
+        this.setPositiveButton(text, { dialogInterface, which-> handleClick(which) })
+    }
+
+    fun AlertDialog.Builder.negativeButton(text: String = "Cancel", handleClick: (which: Int) -> Unit = {}) {
+        this.setNegativeButton(text, { dialogInterface, which-> handleClick(which) })
+    }
+
+
+    private fun settingsChooser() {
+        val alert = android.app.AlertDialog.Builder(this)
+                .setPositiveButton("ok-test", null)
+
+        val li = LayoutInflater.from(this)
+        val promptsView = li.inflate(R.layout.custom_settings_dialog, null)
+
+
+        val input = promptsView.findViewById(R.id.custom_settings_et) as EditText
+        alert.setView(promptsView)
+        alert.setNegativeButton("Cancel") { dialog, whichButton ->
+            dialog.cancel()
+            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        }
+        alert.setPositiveButton("Ok") { dialog, whichButton ->
+            try {
+
+                val value = input.text.toString()
+
+
+
+                recorder.savePreferencesS("articlePerPage",input.text.toString())
+
+
+
+                this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+                Toast.makeText(this, value,
+                        Toast.LENGTH_SHORT).show()
+            } catch (e: NumberFormatException) {
+                Log.d("InsideNumChooser", "No Values in draw# field")
+                alert.setPositiveButton("", null)
+
+                e.printStackTrace()
+            }
+        }
+
+
+        val dialog = alert.create()
+
+
+        input.addTextChangedListener(object : TextWatcher {
+            private fun handleText() {
+                // Grab the button
+                val okButton = dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                if (input.text.length < 0 || input.text.length > 2) {
+                    okButton.isEnabled = false
+                } else {
+                    okButton.isEnabled = true
+                }
+            }
+
+            override fun afterTextChanged(arg0: Editable) {
+                handleText()
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // Nothing to do
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                // Nothing to do
+            }
+        })
+
+        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+
+        dialog.show()
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).isEnabled = false
+
+
     }
 
 

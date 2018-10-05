@@ -19,6 +19,7 @@ interface ApiServices {
     @GET("/{pathToFetch}")
     fun getStories(
             @Path("pathToFetch") pathToFetch: String,
+            @Query("limit") limitAmount:String,
             @Header("Authorization") oauth: String
     ): Call<ResponseBody>
 
