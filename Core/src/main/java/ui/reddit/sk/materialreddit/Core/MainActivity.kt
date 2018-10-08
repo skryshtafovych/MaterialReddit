@@ -411,27 +411,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
-    fun showAlertDialog(dialogBuilder: AlertDialog.Builder.() -> Unit) {
-        val builder = AlertDialog.Builder(this)
-        val seek =  SeekBar(this);
-        seek.setMax(255);
-        seek.setKeyProgressIncrement(1);
-        builder.dialogBuilder()
-        builder.setView(seek)
-        val dialog = builder.create()
-
-        dialog.show()
-    }
-
-    fun AlertDialog.Builder.positiveButton(text: String = "Okay", handleClick: (which: Int) -> Unit = {}) {
-        this.setPositiveButton(text, { dialogInterface, which-> handleClick(which) })
-    }
-
-    fun AlertDialog.Builder.negativeButton(text: String = "Cancel", handleClick: (which: Int) -> Unit = {}) {
-        this.setNegativeButton(text, { dialogInterface, which-> handleClick(which) })
-    }
-
-
     private fun settingsChooser() {
         val alert = android.app.AlertDialog.Builder(this)
                 .setPositiveButton("ok-test", null)
@@ -449,6 +428,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         slider?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 // Write code to perform some action when progress is changed.
+                val streamTest = seekBar.progress.toString()
+                seekerText.setText(streamTest)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -460,7 +441,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val streamTest = seekBar.progress.toString()
                 seekerText.setText(streamTest)
                 //seekerText.text = streamTest.toString()
-                Toast.makeText(this@MainActivity, "Pages Per Page " + seekBar.progress , Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Articles Per Page " + seekBar.progress , Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -476,15 +457,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         alert.setPositiveButton("Ok") { dialog, whichButton ->
             try {
 
-                val valueSlider = slider.progress
-                recorder.savePreferencesS("articlePerPage",valueSlider.toString())
-
-
-
+                val valueSlider = slider.progress.toString()
+                recorder.savePreferencesS("articlePerPage",valueSlider)
                 this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-                Toast.makeText(this, valueSlider,
-                        Toast.LENGTH_SHORT).show()
-
+                //RELOAD UI
                 tokenDecider("",::FetchFunction)
 
             } catch (e: NumberFormatException) {
@@ -499,7 +475,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 
         dialog.show()
-        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).isEnabled = false
 
 
     }
