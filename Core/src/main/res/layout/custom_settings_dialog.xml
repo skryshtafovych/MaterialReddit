@@ -15,20 +15,18 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Enter number of articles per Page."
         android:layout_gravity="center_horizontal" />
-
-    <EditText
-
-        android:layout_width="281dp"
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="*******"
+        android:text="*"
+        android:gravity="center_horizontal"
+        android:textSize="18dp"
+        android:id="@+id/seeker_text"/>
+    <SeekBar
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:max="25"
+        android:min="1"
+        android:id="@+id/amount_of_articles"/>
 
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/custom_settings_et"
-        android:includeFontPadding="true"
-        android:layout_gravity="center_horizontal" />
 </LinearLayout>

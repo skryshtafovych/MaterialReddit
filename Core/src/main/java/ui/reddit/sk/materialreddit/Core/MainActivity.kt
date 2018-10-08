@@ -15,6 +15,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.EditText
 import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -439,7 +440,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val promptsView = li.inflate(R.layout.custom_settings_dialog, null)
 
 
-        val input = promptsView.findViewById(R.id.custom_settings_et) as EditText
+        val seekerText = promptsView.findViewById(R.id.seeker_text) as TextView
+
+        val slider = promptsView.findViewById(R.id.amount_of_articles) as SeekBar
+
+
+
+        slider?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                // Write code to perform some action when progress is changed.
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                // Write code to perform some action when touch is started.
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                // Write code to perform some action when touch is stopped.
+                val streamTest = seekBar.progress.toString()
+                seekerText.setText(streamTest)
+                //seekerText.text = streamTest.toString()
+                Toast.makeText(this@MainActivity, "Pages Per Page " + seekBar.progress , Toast.LENGTH_SHORT).show()
+            }
+        })
+
+
+
+
+
         alert.setView(promptsView)
         alert.setNegativeButton("Cancel") { dialog, whichButton ->
             dialog.cancel()
@@ -448,22 +476,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         alert.setPositiveButton("Ok") { dialog, whichButton ->
             try {
 
-                val value = input.text.toString()
-
-
-
-                recorder.savePreferencesS("articlePerPage",input.text.toString())
+                val valueSlider = slider.progress
+                recorder.savePreferencesS("articlePerPage",valueSlider.toString())
 
 
 
                 this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-                Toast.makeText(this, value,
+                Toast.makeText(this, valueSlider,
                         Toast.LENGTH_SHORT).show()
 
                 tokenDecider("",::FetchFunction)
 
             } catch (e: NumberFormatException) {
-                Log.d("InsideNumChooser", "No Values in draw# field")
                 alert.setPositiveButton("", null)
 
                 e.printStackTrace()
@@ -472,32 +496,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         val dialog = alert.create()
-
-
-        input.addTextChangedListener(object : TextWatcher {
-            private fun handleText() {
-                // Grab the button
-                val okButton = dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
-                if (input.text.length < 0 || input.text.length > 2) {
-                    okButton.isEnabled = false
-                } else {
-                    okButton.isEnabled = true
-                }
-            }
-
-            override fun afterTextChanged(arg0: Editable) {
-                handleText()
-            }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // Nothing to do
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // Nothing to do
-            }
-        })
-
         dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 
         dialog.show()
