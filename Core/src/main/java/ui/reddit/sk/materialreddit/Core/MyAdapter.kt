@@ -11,6 +11,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.Glide.init
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
+import android.R.attr.thumbnail
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 
 
 class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
@@ -59,6 +62,16 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
             Glide.with(itemView)
                     .load(version.desc)
                     .into(imageView)
+
+//Where the Color of Article is controlled setting it to
+// GrayScale is Nice way to Inform User Article already Read.
+            if(version.title.contains("These")){
+                val colorMatrix = ColorMatrix()
+                colorMatrix.setSaturation(0f)
+                val filter = ColorMatrixColorFilter(colorMatrix)
+                imageView.setColorFilter(filter)
+            }
+
 
 
 
