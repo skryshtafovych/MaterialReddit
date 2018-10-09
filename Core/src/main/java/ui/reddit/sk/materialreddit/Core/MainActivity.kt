@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val transaction = manager.beginTransaction()
 
                 // Replace the fragment on container
-                transaction.replace(R.id.container,textFragment)
+                transaction.replace(R.id.main_main_temp,textFragment)
                 transaction.addToBackStack(null)
 
                 // Finishing the transition

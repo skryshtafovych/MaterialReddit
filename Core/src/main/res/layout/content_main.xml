@@ -8,6 +8,7 @@
     android:background="#80000000"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
+    android:id="@+id/main_main_temp"
     tools:showIn="@layout/app_bar_main">
 
 
