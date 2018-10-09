@@ -1,5 +1,6 @@
 package ui.reddit.sk.materialreddit.Core
 
+import android.app.FragmentTransaction
 import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -53,8 +54,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var sharedPref: SharedPreferences
     private var service: ApiServices? = null
     val storiesListFetched = ArrayList<StoriesModel>()
-
-
+    var fragmentTransaction: FragmentTransaction? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,6 +131,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.nav_slideshow -> {
+
+                // Get the text fragment instance
+                val textFragment = DetailStoryFragment()
+
+                // Get the support fragment manager instance
+                val manager = supportFragmentManager
+
+                // Begin the fragment transition using support fragment manager
+                val transaction = manager.beginTransaction()
+
+                // Replace the fragment on container
+                transaction.replace(R.id.container,textFragment)
+                transaction.addToBackStack(null)
+
+                // Finishing the transition
+                transaction.commit()
+
 
             }
             R.id.nav_manage -> {
@@ -253,6 +270,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     fun FetchFunction(accessToken: String){
+
+        val manager = getSupportFragmentManager()
+        val transaction = manager.beginTransaction()
+        //transaction.add(0, DetailStoryFragment)
+        transaction.commit()
 
 
         val articlePerPage =  sharedPref.getString("articlePerPage", "25")
@@ -478,6 +500,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     }
+
+
 
 
 
