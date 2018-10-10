@@ -365,12 +365,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
     private fun setStoriesList() {
 
+
+
         recyclerView.visibility = View.VISIBLE
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         val versions = ArrayList<StoriesModel>()
         versions.addAll(storiesListFetched)
         val myAdapter = MyAdapter(versions)
         recyclerView.adapter = myAdapter
+
 
     }
 

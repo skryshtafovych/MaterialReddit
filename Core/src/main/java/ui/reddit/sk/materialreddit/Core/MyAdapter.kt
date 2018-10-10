@@ -31,6 +31,8 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
         return ViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.reddit_story, parent, false))
     }
 
+
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(version: StoriesModel) {
             val textView = itemView.findViewById<TextView>(R.id.tv_desc)
@@ -42,11 +44,14 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
 
 
 
+
+
                 itemView.setOnClickListener(View.OnClickListener {
 
 
 
-                    DetailStoryActivity()
+                    println("Dude Inside onClickListener ")
+
 
                 })
 
