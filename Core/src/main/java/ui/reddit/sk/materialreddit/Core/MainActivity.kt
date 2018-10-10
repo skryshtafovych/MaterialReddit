@@ -170,8 +170,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 val tokenExtractRaw = JSONObject(jsonStr)
                                 val accessToken = tokenExtractRaw.getString("access_token")
                                 val accessTokenExpiresOn = tokenExtractRaw.getLong("expires_in")
-
-
                                 val now = Instant.now().toEpochMilli()
                                 val combinedExpiredTime = now+accessTokenExpiresOn
                                 println("InsideNetworkCall-Token"+accessToken)
@@ -285,6 +283,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 val singleKindType = item.getJSONObject("data")
                                 val subreddit_name_prefixed = singleKindType.optString("subreddit_name_prefixed")
                                 val title = singleKindType.optString("title")
+                                val permaLink = singleKindType.optString("permalink")
                                // val smallTitle = getWordFromTitle(title)
                                 val num_comments = singleKindType.optInt("num_comments")
                                 val score = singleKindType.optInt("score")
@@ -297,7 +296,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                     println("FakeIterator since going over index."+imagesAR)
                                 }
                                 //DATA OBJ With Specifc Values
-                                storiesListFetched.add(StoriesModel(0,imagesAR, subreddit_name_prefixed,num_comments.toString(),score.toString(),title));
+                                storiesListFetched.add(StoriesModel(accessToken,0,imagesAR, subreddit_name_prefixed,num_comments.toString(),score.toString(),title,permaLink));
 
 
                                 // Your code here

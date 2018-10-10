@@ -23,6 +23,16 @@ interface ApiServices {
             @Header("Authorization") oauth: String
     ): Call<ResponseBody>
 
+    //Get Stories
+    //Static Headers
+    @Headers("Content-type: $content_type",
+            "Accept: application/json")
+    @GET("{pathToFetchDetail}")
+    fun getDetailStories(
+            @Path("pathToFetchDetail",encoded = true) pathToFetch: String,
+            @Header("Authorization") oauth: String
+    ): Call<ResponseBody>
+
 
     //Post Token
 

@@ -14,9 +14,7 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.util.Log
 import android.widget.LinearLayout
-import androidx.core.content.ContextCompat.createDeviceProtectedStorageContext
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.ContextCompat.*
 
 
 class MyAdapter(val context1: MainActivity ,private val storiesList: ArrayList<StoriesModel>) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
@@ -48,6 +46,7 @@ class MyAdapter(val context1: MainActivity ,private val storiesList: ArrayList<S
 
         fun bindItems(version: StoriesModel,context: Context) {
             val card = itemView.findViewById<LinearLayout>(R.id.ln_card_view)
+
             val textView = itemView.findViewById<TextView>(R.id.tv_desc)
             val imageView = itemView.findViewById<ImageView>(R.id.iv_preview_story)
             val commentCount = itemView.findViewById<TextView>(R.id.tv_comments)
@@ -57,12 +56,12 @@ class MyAdapter(val context1: MainActivity ,private val storiesList: ArrayList<S
 
 
 
+
                 itemView.setOnClickListener(View.OnClickListener {
 
-                 
-
+                    val moveActivity =  DetailStoryActivity.newIntent(context,version)
+                    startActivities(context, arrayOf(moveActivity))
                     println("Dude Inside onClickListener "+version.desc)
-
 
                 })
 
