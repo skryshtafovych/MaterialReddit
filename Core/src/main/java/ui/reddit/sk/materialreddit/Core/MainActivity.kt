@@ -1,6 +1,5 @@
 package ui.reddit.sk.materialreddit.Core
 
-import android.app.FragmentTransaction
 import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -19,6 +18,8 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -54,7 +55,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var sharedPref: SharedPreferences
     private var service: ApiServices? = null
     val storiesListFetched = ArrayList<StoriesModel>()
-    var fragmentTransaction: FragmentTransaction? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,21 +132,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.nav_slideshow -> {
 
-                // Get the text fragment instance
-                val textFragment = DetailStoryFragment()
-
-                // Get the support fragment manager instance
-                val manager = supportFragmentManager
-
-                // Begin the fragment transition using support fragment manager
-                val transaction = manager.beginTransaction()
-
-                // Replace the fragment on container
-                transaction.replace(R.id.main_main_temp,textFragment)
-                transaction.addToBackStack(null)
-
-                // Finishing the transition
+                val args = Bundle()
+                //args.putParcelable("my_custom_object", "dude")
+                val fragment = DetailStoryFragment()
+                fragment.setArguments(args)
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.main_main_temp, fragment)
                 transaction.commit()
+                return true
 
 
             }
@@ -503,7 +496,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
-
+    inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
+        beginTransaction().func().commit()
+    }
 
 
 
