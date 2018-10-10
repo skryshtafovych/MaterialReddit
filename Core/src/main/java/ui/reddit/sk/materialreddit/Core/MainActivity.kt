@@ -1,23 +1,17 @@
 package ui.reddit.sk.materialreddit.Core
 
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.*
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -132,14 +126,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.nav_slideshow -> {
 
-                val args = Bundle()
-                //args.putParcelable("my_custom_object", "dude")
-                val fragment = DetailStoryFragment()
-                fragment.setArguments(args)
-                val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.main_main_temp, fragment)
-                transaction.commit()
-                return true
+
+                val detailIntent = DetailStoryActivity.newIntent(this, storiesListFetched[0] )
+
+                startActivity(detailIntent)
 
 
             }
@@ -266,7 +256,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val manager = getSupportFragmentManager()
         val transaction = manager.beginTransaction()
-        //transaction.add(0, DetailStoryFragment)
+        //transaction.add(0, DetailStoryActivity)
         transaction.commit()
 
 

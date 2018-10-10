@@ -6,13 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.Glide.init
-import kotlinx.android.synthetic.main.nav_header_main.view.*
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
-import android.R.attr.thumbnail
-import android.content.Intent
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 
@@ -51,7 +46,7 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
 
 
 
-                    DetailStoryFragment()
+                    DetailStoryActivity()
 
                 })
 
