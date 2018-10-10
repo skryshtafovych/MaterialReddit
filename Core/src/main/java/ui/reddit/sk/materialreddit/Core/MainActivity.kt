@@ -326,27 +326,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                             val arraySIZE = arrayOfStories.length()
                             println("ArrayCount"+arraySIZE+"\nPAGING"+pagingAfter)
-
-
-
-
-
-
-                            //THIS IS How Paging API should look like.
-                            //https://oauth.reddit.com/r/all?after=t3_9kh692
-
-//                                    t1_	Comment
-//                                    t2_	Account
-//                                    t3_	Link
-//                                    t4_	Message
-//                                    t5_	Subreddit
-//                                    t6_	Award
-
-
-
-
-
-
                             println("InsideStoryFetch"+arrayOfStories)
 
 
