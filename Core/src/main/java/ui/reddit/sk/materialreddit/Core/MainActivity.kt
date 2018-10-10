@@ -32,6 +32,7 @@ import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 import java.io.IOException
 import java.util.*
 import org.json.JSONObject
+import ui.reddit.sk.materialreddit.Core.R.id.position
 import java.time.Instant
 import kotlin.reflect.KFunction1
 
@@ -97,16 +98,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.action_settings ->
-//                showAlertDialog {
-//                    setTitle("Settings")
-//                    setMessage("Here you can change amount of Stories returned on one page")
-//                    positiveButton("Yes") {
-//
-//                    }
-//
-//                    negativeButton {
-//                    }
-//                }
+
                 settingsChooser()
 
 
@@ -118,30 +110,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_camera -> {
-                // Handle the camera action
-            }
-            R.id.nav_gallery -> {
 
-            }
-            R.id.nav_slideshow -> {
+            R.id.nav_settings -> {
 
 
                 val detailIntent = DetailStoryActivity.newIntent(this, storiesListFetched[0] )
-
                 startActivity(detailIntent)
 
 
             }
-            R.id.nav_manage -> {
 
-            }
-            R.id.nav_share -> {
 
-            }
-            R.id.nav_send -> {
-
-            }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -371,22 +350,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         val versions = ArrayList<StoriesModel>()
         versions.addAll(storiesListFetched)
-        val myAdapter = MyAdapter(versions)
+        val myAdapter = MyAdapter(this,versions)
         recyclerView.adapter = myAdapter
+        recyclerView.setOnClickListener {  }
+
 
 
     }
 
 
     private fun getWordFromTitle(sentenceToChop:String ):String{
-
         val arr = sentenceToChop.split(" ".toRegex(), 6).toTypedArray()
-
         val firstWord = arr[0]   //the
         val theRest = arr[1]
-
-
-
         return firstWord
     }
 
@@ -407,34 +383,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         val seekerText = promptsView.findViewById(R.id.seeker_text) as TextView
-
         val slider = promptsView.findViewById(R.id.amount_of_articles) as SeekBar
 
 
 
         slider?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                // Write code to perform some action when progress is changed.
                 val streamTest = seekBar.progress.toString()
                 seekerText.setText(streamTest)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
-                // Write code to perform some action when touch is started.
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                // Write code to perform some action when touch is stopped.
                 val streamTest = seekBar.progress.toString()
                 seekerText.setText(streamTest)
-                //seekerText.text = streamTest.toString()
                 Toast.makeText(this@MainActivity, "Articles Per Page " + seekBar.progress , Toast.LENGTH_SHORT).show()
             }
         })
-
-
-
-
 
         alert.setView(promptsView)
         alert.setNegativeButton("Cancel") { dialog, whichButton ->

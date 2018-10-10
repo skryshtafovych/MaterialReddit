@@ -33,18 +33,10 @@ class DetailStoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_detail_main)
 
-        //val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-        //setSupportActionBar()
-
         val title = intent.extras.getString(EXTRA_TITLE)
         val url = intent.extras.getString(EXTRA_URL)
 
         setTitle(title)
 
-
-
-        webView = findViewById(R.id.detail_web_view)
-
-        webView.loadUrl(url)
     }
 }

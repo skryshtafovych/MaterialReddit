@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:max="25"
-        android:min="1"
+        android:min="5"
         android:id="@+id/amount_of_articles"/>
 
 </LinearLayout>

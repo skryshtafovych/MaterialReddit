@@ -1,5 +1,7 @@
 package ui.reddit.sk.materialreddit.Core
 
+import android.content.Context
+import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,17 +12,26 @@ import com.bumptech.glide.Glide
 import ui.reddit.sk.materialreddit.Core.Services.StoriesModel
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.util.Log
+import android.widget.LinearLayout
+import androidx.core.content.ContextCompat.createDeviceProtectedStorageContext
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.ContextCompat.startActivity
 
 
-class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+class MyAdapter(val context1: MainActivity ,private val storiesList: ArrayList<StoriesModel>) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItems(storiesList[position])
+        holder.bindItems(storiesList[position],context1)
+
+
+
     }
 
     override fun getItemCount(): Int {
         return storiesList.size
     }
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,7 +45,9 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindItems(version: StoriesModel) {
+
+        fun bindItems(version: StoriesModel,context: Context) {
+            val card = itemView.findViewById<LinearLayout>(R.id.ln_card_view)
             val textView = itemView.findViewById<TextView>(R.id.tv_desc)
             val imageView = itemView.findViewById<ImageView>(R.id.iv_preview_story)
             val commentCount = itemView.findViewById<TextView>(R.id.tv_comments)
@@ -44,13 +57,11 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
 
 
 
-
-
                 itemView.setOnClickListener(View.OnClickListener {
 
+                 
 
-
-                    println("Dude Inside onClickListener ")
+                    println("Dude Inside onClickListener "+version.desc)
 
 
                 })
@@ -61,6 +72,7 @@ class MyAdapter(private val storiesList: ArrayList<StoriesModel>) : RecyclerView
             textView.text = version.image_url;
             commentCount.text = version.comment_count
             upvoteCount.text = version.upvote_count
+
             title.text = version.title
 
             Glide.with(itemView)
