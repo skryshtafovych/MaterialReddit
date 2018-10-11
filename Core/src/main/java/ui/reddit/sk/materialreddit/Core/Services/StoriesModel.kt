@@ -12,12 +12,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.io.Serializable
 
-class StoriesModel(    var id: Int ,
+class StoriesModel(    var accessToken: String,
+                       var id: Int ,
                        var desc: String,
                        var image_url: String,
                        var comment_count: String,
                        var upvote_count: String,
-                       var title: String): Serializable {
+                       var title: String,
+                       var permaLink:String ): Serializable {
 
 
 
