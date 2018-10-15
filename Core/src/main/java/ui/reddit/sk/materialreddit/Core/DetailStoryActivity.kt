@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.content_detail_main.*
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -106,6 +107,12 @@ class DetailStoryActivity : AppCompatActivity() {
                         try {
                             val jsonStr = response.body()!!.string()
                             println("FullJSON-Detail"+jsonStr)
+                            val mainTopLevelOne =  JSONArray(jsonStr).getJSONObject(0)
+                            val mainTopLevelTwo =  JSONArray(jsonStr).getJSONObject(1).getJSONObject("data").getJSONArray("children")
+
+
+                            Log.e("InsideDetailStoryFetch", mainTopLevelTwo.length().toString()+mainTopLevelTwo.toString())
+
 
 
 

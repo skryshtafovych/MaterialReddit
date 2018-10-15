@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val acessToken = sharedPref.getString("access_token", "na")
         val accessTokenExpireTime = sharedPref.getLong("expires_in", 0)
         val now = Instant.now().toEpochMilli()
-        println("SharedPref"+now+"\nSharedPref"+accessTokenExpireTime)
+        println("SharedPref"+now+"\nSharedPref"+acessToken)
         ///IF TOKEN IS EXPIRED OR DEAD GET NEW TOKEN
         if(now > accessTokenExpireTime){
             println("TokenHasExpired")
